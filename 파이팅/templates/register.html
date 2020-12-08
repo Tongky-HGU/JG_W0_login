@@ -1,5 +1,58 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title> Register </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+        <style>
+            .log-box{
+                width:500px;
+                margin: 20px auto 0 auto;
+                border: black solid 2px;
+                padding: 40px;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="log-box">
+          <form action="/register/" method="POST">
+            <div class="field">
+                <label class="label">Register</label>
+                <div class="control has-icons-left has-icons-right">
+                <input class="input" type="username" name="username" placeholder="Username">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                </span>
+                </div>
+            </div>
+            <div class="field">
+              <p class="control has-icons-left">
+                <input class="input" type="password" name="password" placeholder="Password">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
+
+            <div class="field">
+                <p class="control">
+                <button type="submit" onclick="location.href='/login'" class="button is-success">
+                  Register
+                </button>
+                </p>
+            </div>
+          </form>
+        </div>
+    </body>
+
+
+<!-- {% block content %}
 {% if session['logged_in'] %}
 <p>Oh no Dont show page</p>
 {% else %}
@@ -11,4 +64,4 @@
   <input type="submit" value="Log in">
 </form>
 {% endif %}
-{% endblock %}
+{% endblock %} -->

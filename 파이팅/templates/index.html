@@ -1,4 +1,32 @@
-{% extends "base.html" %}
+<!-- <!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title> Login </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+		<script>
+			$(document).ready(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "/memo",
+                    data: {},
+                    success: function(response){
+
+            })
+		</script>
+
+	</head>
+	<body>
+		<a href="/logout">Logout</a> <br> <br>
+		<form action="" method="POST">
+			<p>Hi</p>
+	  		<input type="username" name="username" placeholder="Instagram Username">
+	  		<input type="submit" value="Finds">
+		</form>
+	</body> -->
 {% block content %}
 {% if session['logged_in'] %}
    
@@ -8,6 +36,7 @@
 
 	<a href="/logout">Logout</a> <br> <br>
 	<form action="" method="POST">
+		<p>Hi {{session['name']}}</p>
 	  <input type="username" name="username" placeholder="Instagram Username">
 	  <input type="submit" value="Finds">
 	</form>

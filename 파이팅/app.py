@@ -13,7 +13,7 @@ db = client.session
 def home():
 	""" Session control"""
 	if not session.get('logged_in'):
-		return render_template('index.html')
+		return render_template('login.html')
 	else:
 		if request.method == 'POST':
 			username = getname(request.form['username'])
@@ -34,6 +34,7 @@ def login():
 		if user:
 			if user['password'] == passw:
 				session['logged_in'] = True
+				session['name'] = name
 				return redirect(url_for('home'))
 			else:
 				return 'Dont Login'
