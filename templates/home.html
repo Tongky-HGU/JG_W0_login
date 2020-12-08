@@ -5,21 +5,116 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- JS -->
+    <!-- bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- JS
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script> -->
 
     <title>home</title>
     <script>
+        my_id = 1234
+
+        $(document).ready(function () {
+            $("#app").html("");
+            showMemos();
+        });
+
+        function postMemo() {
+            // let title = $("#memo-title").val();
+            let memo = $("#memo_input").val();
+            let name = session['name'];
+            $.ajax({
+                type: "POST",
+                url: "/home",
+                data: { id_give: name, memo_give: memo },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert("저장 완료!");
+                        window.location.reload();
+                    } else {
+                        alert("서버 오류!")
+                    }
+                }
+            })
+        }
+
+        function showMemos() {
+            $.ajax({
+                type: "GET",
+                url: "/home",
+                data: {},
+                success: function (response) {
+                    let memos = response["memos"];
+                    // console.log(memos);
+                    for (let i = 0; i < memos.length; i++) {
+                        let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
+                    <div class="card large">
+                        <div class="card-content">
+                            <div class="title">{{session['name']}}</div>
+                            <div class="content">cardcontent</div>
+                        </div>
+                    </div>
+                </div>`
+                        $("#app").append(tempHtml);
+                    }
+                }
+            })
+        }
 
     </script>
 </head>
 
 <body>
-    <h3>로그인성공^^</h3>
+
+    <div class="container">
+        <div class="section">
+            <div class="columns">
+                <div class="column has-text-centered">
+                    <h1 class="title" style="color: rgb(1, 1, 47);"> 일기장 </h1><br>
+                </div>
+            </div>
+            <div id="app" class="row columns is-multiline">
+                <div v-for="card in cardData" key="card.id" class="column is-4">
+                    <div class="card large">
+                        <div class="card-content">
+                            <div class="title">@{{session['name']}}</div>
+                            <div class="field">
+                                <div class="control">
+                                    <input id="memo_input" class="input" type="text" placeholder="내용">
+                                </div>
+                            </div>
+                            <div class="button" onclick=postMemo()> 업로드 </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-for="card in cardData" key="card.id" class="column is-4">
+                    <div class="card large">
+                        <div class="card-content">
+                            <div class="title">ddd</div>
+                            <p>dddd</p>
+                            <div class="content">content</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <p>
+                    <strong> 9조짱ㅎㅎ </strong>
+                </p>
+            </div>
+        </div>
+    </footer>
+
 
 </body>
 

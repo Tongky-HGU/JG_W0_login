@@ -15,17 +15,9 @@
     <title>login</title>
     <script>
 
-        // 쿠키값 설정
-        // function setCookie(name, value, expiredays) {
-        //     var today = new Date();
-        //     print(today)
-        //     today.setDate(today.getDate() + expiredays);
-        //     document.cookie = name + "=" + escape(value) + "; path=/; expires=" + today.toGMTString() + ";";
-        // }
-
         function login() {
-            const id = $("id").val
-            const password = $("password").val
+            const id = $("#id").val();
+            const password = $("#password").val();
             $.ajax({
                 type: "POST",
                 url: "/login",

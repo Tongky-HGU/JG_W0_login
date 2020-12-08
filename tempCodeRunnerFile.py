@@ -1,2 +1,1 @@
-class User():
-#     id = db.Column(db.Interger,primar)
+session['name']
