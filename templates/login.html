@@ -1,0 +1,58 @@
+<!Doctype html>
+<html lang="ko">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+
+    <title>login</title>
+    <script>
+
+        // 쿠키값 설정
+        function setCookie(name, value, expiredays) {
+            var today = new Date();
+            print(today)
+            today.setDate(today.getDate() + expiredays);
+            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + today.toGMTString() + ";";
+        }
+
+        function login() {
+            const id = $("id").val
+            const passwrod = $("password").val
+
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                data: { 'id_give': id, 'password_give': password },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert("저장 완료!");
+                        window.location.reload();
+                    } else {
+                        alert("서버 오류!")
+                    }
+                }
+            })
+
+        }
+
+    </script>
+</head>
+
+<body>
+    <h3>로그인폼</h3>
+    id: <input type="text" id="id" required>
+    password: <input type="password" id="password" required>
+    <button onclick="login()">로그인</button>
+
+
+</body>
+
+</html>
