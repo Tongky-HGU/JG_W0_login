@@ -23,9 +23,9 @@
         });
 
         function postMemo() {
-            // let title = $("#memo-title").val();
+            let name = $("#name").val();
+            console.log(name)
             let memo = $("#memo_input").val();
-            let name = session['name'];
             $.ajax({
                 type: "POST",
                 url: "/home",
@@ -73,20 +73,20 @@
         <div class="section">
             <div class="columns">
                 <div class="column has-text-centered">
-                    <h1 class="title" style="color: rgb(1, 1, 47);"> 일기장 </h1><br>
+                    <h1 class="title" style="color: rgb(1, 1, 47);"> 정글 불만 게시판 </h1><br>
                 </div>
             </div>
             <div id="app" class="row columns is-multiline">
                 <div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
-                            <div class="title">@{{session['name']}}</div>
+                            <div id="name"class="title">@{{session['name']}}</div>
                             <div class="field">
                                 <div class="control">
                                     <input id="memo_input" class="input" type="text" placeholder="내용">
                                 </div>
                             </div>
-                            <div class="button" onclick=postMemo()> 업로드 </div>
+                            <div class="button" onclick="postMemo()"> 업로드 </div>
                         </div>
                     </div>
                 </div>
