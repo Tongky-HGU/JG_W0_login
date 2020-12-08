@@ -16,27 +16,26 @@
     <script>
 
         // 쿠키값 설정
-        function setCookie(name, value, expiredays) {
-            var today = new Date();
-            print(today)
-            today.setDate(today.getDate() + expiredays);
-            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + today.toGMTString() + ";";
-        }
+        // function setCookie(name, value, expiredays) {
+        //     var today = new Date();
+        //     print(today)
+        //     today.setDate(today.getDate() + expiredays);
+        //     document.cookie = name + "=" + escape(value) + "; path=/; expires=" + today.toGMTString() + ";";
+        // }
 
         function login() {
             const id = $("id").val
-            const passwrod = $("password").val
-
+            const password = $("password").val
             $.ajax({
                 type: "POST",
                 url: "/login",
                 data: { 'id_give': id, 'password_give': password },
                 success: function (response) {
                     if (response["result"] == "success") {
-                        alert("저장 완료!");
+                        alert("로그인 성공!");
                         window.location.reload();
                     } else {
-                        alert("서버 오류!")
+                        alert("로그인 실패! 아이디, 비밀번호 확인하세욤")
                     }
                 }
             })
