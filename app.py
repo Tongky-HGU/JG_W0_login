@@ -30,6 +30,7 @@ def login():
         if password == user['password']:
             session['logged_in'] = True
             session['name'] = user['username']
+            session['sort_order'] = 'mine'
             return jsonify({'result': 'success'})
     return jsonify({'result': 'fail'})
 
@@ -61,7 +62,12 @@ def post_memo():
 
 @app.route('/home/read', methods=['GET'])
 def read_memos():
-    result = list(db.memos.find({}))
+    # result = list(db.memos.find({}))
+    if session['sort_order'] == 'time':
+        result = list(db.memos.find({}))
+    elif session['sort_order'] == 'mine':
+        result = list(db.memos.find({'id':session['name']}))
+
     for data in result:
         data['_id'] = str(data['_id'])
     return jsonify({'result': 'success', 'memos': result})
@@ -71,6 +77,13 @@ def delete_memos():
     db_id_receive = request.form['db_id_give']
     object_id = ObjectId(db_id_receive)
     db.memos.delete_one({'_id' : object_id})
+
+    return jsonify({'result': 'success'})
+
+@app.route('/home/sort', methods=['POST'])
+def sort_memos():
+    sort_order_receive = request.form['sort_order_give']
+    session['sort_order'] = sort_order_receive
 
     return jsonify({'result': 'success'})
     
