@@ -58,15 +58,26 @@ def post_memo():
     db.memos.insert_one(memo)
     return jsonify({'result': 'success'})
 
-<<<<<<< HEAD
-
-@app.route('/home', methods=['GET'])
-=======
 @app.route('/home/read', methods=['GET'])
->>>>>>> 03590d55b7e31d2a51d8ea0da19a3c075ece0f74
 def read_memos():
-    result = list(db.memos.find({}, {'_id': 0}))
+    result = list(db.memos.find({}))
+    for data in result:
+        data['_id'] = str(data['_id'])
     return jsonify({'result': 'success', 'memos': result})
+
+@app.route('/home/delete', methods=['POST'])
+def delete_memos():
+    db_id_receive = request.form['db_id_give']
+    # object_id_del require(db_id_receive).ObjectID;
+    # print(object_id)
+    db.memos.delete_one({'_id' : db_id_receive})
+
+    
+
+
+    # db.memos.delete_one({'title':title_receive})
+
+    return jsonify({'result': 'success'})
     
 @app.route("/logout")
 def logout():

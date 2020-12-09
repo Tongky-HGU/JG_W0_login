@@ -62,7 +62,6 @@
 
         $(document).ready(function () {
             showMemos();
-
         });
 
         function getDate() {
@@ -77,7 +76,7 @@
         }
 
         function postMemo() {
-            let name = $("#my_name").text().replace("@"," ");
+            let name = $("#my_name").text().replace("@","");
             let memo = $("#my_memo").val();
             let date = getDate();
 
@@ -109,26 +108,41 @@
                         if (memos[i]['anonymous'] == 'false') {
                             upload_name = memos[i]['id']
                         }
-                        // console.log(memos[i]['id'].replace(/[0-9]/g, ""));
-                        if (memos[i]['id'] == `{{session['name']}}`){
-                            console.log('zz')
-                        }
-                        // console.log(memos[i]['id'].length)
-                        // console.log(`{{session['name']}}`)
+                        
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
                             <div class="title">@${upload_name}</div>
                             <div class="content is-multiline">${memos[i]['memo']}</div>
-                            <div class="content_date is-pulled-right">${memos[i]['date']}</div>
-                        </div>
+                            <div class="content_date is-pulled-right">${memos[i]['date']}</div>`
+                        if (memos[i]['id'] == `{{session['name']}}`){
+                            tempHtml = tempHtml + `<div class="button" onclick="deleteMemo('${memos[i]['_id']}')" style="float:left">삭제</div>`;
+                        }
+                        tempHtml = tempHtml + `</div>
                     </div>
                 </div>`
+                        
                         $("#app").append(tempHtml);
                     }
                 }
             })
         }
+
+        function deleteMemo(db_id) {
+            console.log(db_id);
+            $.ajax({
+                type: "POST",
+                url: "/home/delete",
+                data: { 'db_id_give': db_id },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('삭제 완료!')
+                        window.location.reload()
+                    }
+                }
+            });
+        }
+
 
     </script>
 </head>
