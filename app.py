@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient  
-import requests
 from bson import ObjectId
+import requests
 
 app = Flask(__name__)
 client = MongoClient('localhost', 27017)
@@ -55,7 +55,7 @@ def post_memo():
     date_recieve = request.form['date_give']  
     anonymous_receive = request.form['anonymous']
 
-    memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve, 'anonymous': anonymous_receive }
+    memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve, 'anonymous': anonymous_receive, 'like': 0, 'dislike': 0}
 
     db.memos.insert_one(memo)
     return jsonify({'result': 'success'})
@@ -77,7 +77,15 @@ def delete_memos():
     db_id_receive = request.form['db_id_give']
     object_id = ObjectId(db_id_receive)
     db.memos.delete_one({'_id' : object_id})
+    return jsonify({'result': 'success'})
 
+@app.route('/home/like', methods=['POST'])
+def like_memos():
+    db_id_receive = request.form['db_id_give']
+    object_id = ObjectId(db_id_receive)
+    memo = db.memos.find_one({'_id' : object_id})
+    new_like = memo['like'] + 1
+    db.memos.update_one({'_id' : object_id}, {'$set':{'like':new_like}})
     return jsonify({'result': 'success'})
 
 @app.route('/home/sort', methods=['POST'])
@@ -87,6 +95,15 @@ def sort_memos():
 
     return jsonify({'result': 'success'})
     
+@app.route('/home/dislike', methods=['POST'])
+def dislike_memos():
+    db_id_receive = request.form['db_id_give']
+    object_id = ObjectId(db_id_receive)
+    memo = db.memos.find_one({'_id' : object_id})
+    new_dislike = memo['dislike'] + 1
+    db.memos.update_one({'_id' : object_id}, {'$set':{'dislike':new_dislike}})
+    return jsonify({'result': 'success'})
+
 @app.route("/logout")
 def logout():
 	"""Logout Form"""

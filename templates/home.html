@@ -13,6 +13,8 @@
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
 
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+
 
     <title>home</title>
     <style>
@@ -46,28 +48,25 @@
             border: hsl(48, 100%, 67%) solid 5px;
         }
 
+        .post-box {
+            padding-bottom: 13px;
+        }
+
         #logout {
             text-align: right;
             margin-right: 20px;
             margin-top: 10px;
             /* color: black; */
             font-weight: bold;
-
         }
 
-        /* .dropdown {
-            box-shadow: 0 0 8px #777;
-            display: none;
-            left: 0;
-            position: absolute;
-            top: 100%;
-            z-index: 1000;
+        #icon {
+            padding-top: 10px;
         }
 
-        .dropdown.is-open {
-            display: block;
+        /* .like-footer{
+            position: fixed;
         } */
-
     </style>
     <script>
         let anonymous_check = false;
@@ -82,6 +81,7 @@
 
         $(document).ready(function () {
             showMemos();
+
         });
 
         function getDate() {
@@ -123,7 +123,7 @@
                 success: function (response) {
                     if (response["result"] == "success") {
                         window.location.reload();
-                    } 
+                    }
                 }
             })
         }
@@ -143,17 +143,35 @@
                         }
 
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
-                    <div class="card large">
-                        <div class="card-content">
-                            <div class="title">@${upload_name}</div>
-                            <div class="content is-multiline">${memos[i]['memo']}</div>
-                            <div class="content_date is-pulled-right">${memos[i]['date']}</div>`
+                                            <div class="card large">
+                                                <div class="card-content post-box">`
                         if (memos[i]['id'] == `{{session['name']}}`) {
-                            tempHtml = tempHtml + `<div class="button" onclick="deleteMemo('${memos[i]['_id']}')" style="float:left">삭제</div>`;
+                            tempHtml = tempHtml + `<span id="icon" class="icon is-small has-text-danger-dark is-pulled-right" >
+                                                                                <i class="far fa-times-circle" onclick="deleteMemo('${memos[i]['_id']}')"></i>
+                                                                            </span>`;
                         }
-                        tempHtml = tempHtml + `</div>
-                    </div>
-                </div>`
+                        tempHtml = tempHtml + `<div class="title">@${upload_name}</div>
+                                                <div class="content is-multiline">${memos[i]['memo']}</div>
+                                                <div class="is-right">${memos[i]['date']}</div>
+                                                </div>
+                                                
+                                                <footer class="card-footer like-footer">
+                                                    <p class="card-footer-item has-text-info" style="cursor: pointer" onclick="like_memo('${memos[i]['_id']}')">
+                                                        ${memos[i]['like']}
+                                                        <span id="icon" class="icon" >
+                                                            <i class="far fa-thumbs-up"></i>
+                                                        </span>
+                                                    </p>
+                                                    <p class="card-footer-item has-text-danger" style="cursor: pointer" onclick="dislike_memo('${memos[i]['_id']}')">
+                                                        ${memos[i]['dislike']}
+                                                        <span id="icon" class="icon" >
+                                                            <i class="far fa-thumbs-down"></i>
+                                                        </span>
+                                                    </p>
+                                                </footer>
+                                                
+                                            </div>
+                                        </div>`
 
                         $("#app").append(tempHtml);
                     }
@@ -176,13 +194,39 @@
             });
         }
 
+        function like_memo(db_id) {
+            $.ajax({
+                type: "POST",
+                url: "/home/like",
+                data: { 'db_id_give': db_id },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('좋아요 완료!')
+                        window.location.reload()
+                    }
+                }
+            });
+        }
 
+        function dislike_memo(db_id) {
+            $.ajax({
+                type: "POST",
+                url: "/home/dislike",
+                data: { 'db_id_give': db_id },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('싫어요 완료!')
+                        window.location.reload()
+                    }
+                }
+            });
+        }
     </script>
 </head>
 
 <body>
     <section class="hero is-warning">
-        <a id="logout" href="/logout" class="is-link"> 로그아웃 </a>
+        <a id="logout" href="/logout" class="has-text-danger"> 로그아웃 </a>
         <div class="hero-body">
 
             <div class="container center">
@@ -200,39 +244,39 @@
 
             <div class="dropdown is-hoverable">
                 <div class="dropdown-trigger">
-                  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
-                    <span>정렬</span>
-                    <span class="icon is-small">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                  </button>
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                        <span>정렬</span>
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </button>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-                  <div class="dropdown-content">
-                    <a onclick="sortMemo('mine')" class="dropdown-item">
-                        내가 쓴 글
-                    </a>
-                    <a onclick="sortMemo('time')" class="dropdown-item">
-                        시간순
-                    </a>
-                    <a href="#" class="dropdown-item">
-                      Grid
-                    </a>
-                    <a href="#" class="dropdown-item">
-                      Form
-                    </a>
-                    <a href="#" class="dropdown-item">
-                      Elements
-                    </a>
-                    <a href="#" class="dropdown-item">
-                      Components
-                    </a>
-                    <a href="#" class="dropdown-item">
-                      Layout
-                    </a>
-                  </div>
+                    <div class="dropdown-content">
+                        <a onclick="sortMemo('mine')" class="dropdown-item">
+                            내가 쓴 글
+                        </a>
+                        <a onclick="sortMemo('time')" class="dropdown-item">
+                            시간순
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            Grid
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            Form
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            Elements
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            Components
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            Layout
+                        </a>
+                    </div>
                 </div>
-              </div>
+            </div>
 
             <div id="app" class="row columns is-multiline">
                 <div v-for="card in cardData" key="card.id" class="column is-4">
