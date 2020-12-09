@@ -14,6 +14,22 @@
         crossorigin="anonymous"></script>
 
     <title>home</title>
+    <style>
+        .card {
+            padding: 5px;
+            height: 250px;
+
+        }
+        
+        .content {
+            word-wrap: anywhere;
+            height: 100px;
+            display: flex;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+    </style>
     <script>
         $(document).ready(function () {
             $("#app").html("");
@@ -27,23 +43,35 @@
                                 </div>
                             </div>
                             <div class="button" onclick="postMemo()"> 업로드 </div>
+                            <div class="content" id="my_date">${getDate()}</div>
                         </div>
                     </div>
                 </div>`
             $("#app").append(tempHtml);
             showMemos();
-
         });
 
+        function getDate() {
+            let today = new Date();
+            let year = today.getFullYear();
+            let month = today.getMonth();
+            let date = today.getDate();
+            let hours = today.getHours();
+            let minutes = today.getMinutes();
+            let now = year + '/' + month + '/' + date + ' ' + hours + ":" + minutes;
+            return now
+        }
+
         function postMemo() {
-            let name = $("#my_name").text().replace("@","");
+            let name = $("#my_name").text().replace("@", "");
             let memo = $("#my_memo").val();
+            let date = getDate();
             console.log(name);
 
             $.ajax({
                 type: "POST",
                 url: "/home",
-                data: { id_give: name, memo_give: memo },
+                data: { id_give: name, memo_give: memo, date_give : date },
                 success: function (response) {
                     if (response["result"] == "success") {
                         alert("저장 완료!");
@@ -63,12 +91,13 @@
                 success: function (response) {
                     let memos = response["memos"];
                     console.log(memos);
-                    for (let i = memos.length-1; i > 0; i--) {
+                    for (let i = memos.length - 1; i >= 0; i--) {
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
                             <div class="title">@${memos[i]['id']}</div>
-                            <div class="content">${memos[i]['memo']}</div>
+                            <div class="content is-multiline">${memos[i]['memo']}</div>
+                            <div class="content_date is-pulled-right">${memos[i]['date']}</div>
                         </div>
                     </div>
                 </div>`

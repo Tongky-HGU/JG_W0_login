@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, session
-from pymongo import MongoClient  
+from pymongo import MongoClient
 import requests
 
 app = Flask(__name__)
@@ -40,17 +40,18 @@ def login():
 def post_memo():
     id_receive = request.form['id_give']  
     memo_receive = request.form['memo_give']  
+    date_recieve = request.form['date_give']
 
-    memo = {'id': id_receive, 'memo': memo_receive }
+    memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve }
 
     db.memos.insert_one(memo)
     return jsonify({'result': 'success'})
 
 
-# @app.route('/home', methods=['GET'])
-# def read_memos():
-#     result = list(db.memos.find({}, {'_id': 0}))
-#     return jsonify({'result': 'success', 'memos': result})
+@app.route('/home', methods=['GET'])
+def read_memos():
+    result = list(db.memos.find({}, {'_id': 0}))
+    return jsonify({'result': 'success', 'memos': result})
     
 
 if __name__ == '__main__':  
