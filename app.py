@@ -59,8 +59,9 @@ def post_memo():
     memo_receive = request.form['memo_give']
     date_recieve = request.form['date_give']  
     anonymous_receive = request.form['anonymous']
+    
 
-    memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve, 'anonymous': anonymous_receive, 'like': 0, 'dislike': 0}
+    memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve, 'anonymous': anonymous_receive, 'like': 0, 'dislike': 0, 'like_id' : "", 'dislike_id':""}
 
     db.memos.insert_one(memo)
     return jsonify({'result': 'success'})
@@ -93,11 +94,20 @@ def delete_memos():
 @app.route('/home/like', methods=['POST'])
 def like_memos():
     db_id_receive = request.form['db_id_give']
+    user_id_receive = request.form['id_give']
     object_id = ObjectId(db_id_receive)
     memo = db.memos.find_one({'_id' : object_id})
-    new_like = memo['like'] + 1
+    print(user_id_receive)
+    print(memo['like_id'].split(','))
+    if user_id_receive in memo['like_id'].split(','):
+        return jsonify({'result': 'fail'})
+    else: new_like = memo['like'] + 1
     db.memos.update_one({'_id' : object_id}, {'$set':{'like':new_like}})
+    like_id = memo['like_id']
+    new_like_id = like_id + ',' + user_id_receive
+    db.memos.update_one({'_id' : object_id}, {'$set':{'like_id':new_like_id}})
     return jsonify({'result': 'success'})
+
 
 @app.route('/home/sort', methods=['POST'])
 def sort_memos():
@@ -109,10 +119,16 @@ def sort_memos():
 @app.route('/home/dislike', methods=['POST'])
 def dislike_memos():
     db_id_receive = request.form['db_id_give']
+    user_id_receive = request.form['id_give']
     object_id = ObjectId(db_id_receive)
     memo = db.memos.find_one({'_id' : object_id})
-    new_dislike = memo['dislike'] + 1
+    if user_id_receive in memo['dislike_id'].split(','):
+        return jsonify({'result': 'fail'})
+    else: new_dislike = memo['dislike'] + 1
     db.memos.update_one({'_id' : object_id}, {'$set':{'dislike':new_dislike}})
+    dislike_id = memo['dislike_id']
+    new_dislike_id = dislike_id + ',' + user_id_receive
+    db.memos.update_one({'_id' : object_id}, {'$set':{'dislike_id':new_dislike_id}})
     return jsonify({'result': 'success'})
 
 @app.route("/logout")

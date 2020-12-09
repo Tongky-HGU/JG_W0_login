@@ -195,32 +195,42 @@
         }
 
         function like_memo(db_id) {
+            let user_id = {{session['name']}}
             $.ajax({
                 type: "POST",
                 url: "/home/like",
-                data: { 'db_id_give': db_id },
+                data: { 'db_id_give': db_id, 'id_give': user_id},
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert('좋아요 완료!')
                         window.location.reload()
                     }
+                    else {
+                        alert('이미 추천하셨습니다.')
+                    }
+                    
+                    }
+            
                 }
-            });
-        }
+            )}
 
         function dislike_memo(db_id) {
+            let user_id = {{session['name']}}
             $.ajax({
                 type: "POST",
                 url: "/home/dislike",
-                data: { 'db_id_give': db_id },
+                data: { 'db_id_give': db_id, 'id_give': user_id},
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert('싫어요 완료!')
                         window.location.reload()
                     }
+                    else{
+                        alert('이미 비추천하셨습니다.')
+                    }
+                    }
                 }
-            });
-        }
+            )}
     </script>
 </head>
 
