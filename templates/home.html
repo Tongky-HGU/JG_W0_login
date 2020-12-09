@@ -114,24 +114,55 @@
                 data: {},
                 success: function (response) {
                     let memos = response["memos"];
+                    let name = `{{session['name']}}`;
                     for (let i = memos.length-1; i >= 0; i--) {
-                        let upload_name = '익명'
+                        let upload_name = '익명';
                         if (memos[i]['anonymous'] == 'false') {
-                            upload_name = memos[i]['id']
+                            upload_name = memos[i]['id'];
                         }
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
                             <div class="title">@${upload_name}</div>
-                            <div class="content is-multiline">${memos[i]['memo']}</div>
-                            <div class="content_date is-pulled-right">${memos[i]['date']}</div>
+                            <div class="content is-multiline">${memos[i]['memo']}</div>`;
+                        //삭제버튼
+                        console.log(name.length);
+                        console.log(String(memos[i]['id'].replace(' ','')).length);
+                        console.log(memos[i]['id'].replace(' ','') == name);
+
+                        console.log('____________________');
+
+
+                        if(memos[i]['id'].replace('\n','') == `{{session['name']}}`){
+                            tempHtml = tempHtml + `<div class="button" onclick="deleteMemo('ㅅ')" style="float:left">삭제</div>`;
+                            console.log('일치');
+                        }
+
+                        console.log('____________________')
+
+                        tempHtml = tempHtml + `<div class="content_date is-pulled-right">${memos[i]['date']}</div>
                         </div>
                     </div>
-                </div>`
+                </div>`;
                         $("#app").append(tempHtml);
+                        
                     }
                 }
             })
+        }
+
+        function deleteMemo(title) {
+            // $.ajax({
+            //     type: "POST",
+            //     url: "/memo/delete",
+            //     data: { 'title_give': title },
+            //     success: function (response) {
+            //         if (response['result'] == 'success') {
+            //             alert('삭제 완료!')
+            //             window.location.reload()
+            //         }
+            //     }
+            // });
         }
 
     </script>
