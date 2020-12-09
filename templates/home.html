@@ -16,12 +16,13 @@
 
     <title>home</title>
     <style>
+        .center {
+                text-align: center;
+            }
         .card {
             padding: 5px;
-            height: 250px;
-
+            height: 300px;
         }
-        
         .content {
             word-wrap: anywhere;
             height: 100px;
@@ -29,30 +30,49 @@
             overflow-y: auto;
             flex-direction: column;
         }
-
-        .center {
-                text-align: center;
-            }
+        #logout{
+            text-align:right;
+            margin-right: 20px;
+            margin-top: 10px;
+            /* color: black; */
+            font-weight: bold;
+            
+        }
     </style>
     <script>
+        let anonymous_check = false
+        function anonymous(a_box) {
+            if(a_box.checked == true) {
+                anonymous_check = true
+            } else {
+                anonymous_check = false
+            }
+        }
+
         $(document).ready(function () {
             $("#app").html("");
             tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
-                            <div class="title" id="my_name">{{session['name']}}</div>
+                            <div class="title" id="my_name">{{session['name']}} 
+                            </div>
                             <div class="field">
                                 <div class="control">
                                     <input class="input" id="my_memo" type="text" placeholder="내용">
                                 </div>
                             </div>
-                            <div class="button" onclick="postMemo()"> 업로드 </div>
-                            <div class="content" id="my_date">${getDate()}</div>
+                            <div class="button is-link" onclick="postMemo()" style="float:left"> 업로드 
+                            </div>
+                            <label class="checkbox is-pulled-right" style="float:left">
+                                    <input id="anonymous" type="checkbox" onclick="anonymous(this)">
+                                        익명
+                                    </label>
                         </div>
                     </div>
                 </div>`
             $("#app").append(tempHtml);
             showMemos();
+
         });
 
         function getDate() {
@@ -67,15 +87,14 @@
         }
 
         function postMemo() {
-            let name = $("#my_name").text().replace("@", "");
+            let name = $("#my_name").text().replace("@","");
             let memo = $("#my_memo").val();
             let date = getDate();
-            console.log(name);
 
             $.ajax({
                 type: "POST",
                 url: "/home",
-                data: { id_give: name, memo_give: memo, date_give : date },
+                data: { id_give: name, memo_give: memo, anonymous: anonymous_check, date_give : date},
                 success: function (response) {
                     if (response["result"] == "success") {
                         alert("저장 완료!");
@@ -94,12 +113,15 @@
                 data: {},
                 success: function (response) {
                     let memos = response["memos"];
-                    console.log(memos);
                     for (let i = memos.length-1; i >= 0; i--) {
+                        let upload_name = '익명'
+                        if (memos[i]['anonymous'] == 'false') {
+                            upload_name = memos[i]['id']
+                        }
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
-                            <div class="title">@${memos[i]['id']}</div>
+                            <div class="title">@${upload_name}</div>
                             <div class="content is-multiline">${memos[i]['memo']}</div>
                             <div class="content_date is-pulled-right">${memos[i]['date']}</div>
                         </div>
@@ -116,10 +138,12 @@
 
 <body>
     <section class="hero is-warning">
+        <a id="logout" href="/logout" class="is-link"> 로그아웃 </a>
         <div class="hero-body">
+            
             <div class="container center">
                 <h1 class="title">
-                    정글 불만 게시판😆
+                    정글 익명 게시판😆
                 </h1>
                 <h2 class="subtitle">
                     비밀 보장 해드립니다

@@ -1,10 +1,10 @@
-from flask import Flask, render_template, jsonify, request, session
-from pymongo import MongoClient
+from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+from pymongo import MongoClient  
 import requests
 
 app = Flask(__name__)
-
-client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+client = MongoClient('localhost', 27017)
+#client = MongoClient('mongodb://9jo:9jo@13.209.68.109', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.session  # 'dbsparta'라는 이름의 db를 만들거나 사용합니다.
 
 
@@ -30,7 +30,6 @@ def login():
             session['logged_in'] = True
             session['name'] = user['username']
             return jsonify({'result': 'success'})
-            
     return jsonify({'result': 'fail'})
 
 @app.route('/register/')
@@ -46,13 +45,15 @@ def add_user():
 @app.route('/home', methods=['POST'])
 def post_memo():
     id_receive = request.form['id_give']  
-    memo_receive = request.form['memo_give']  
-    date_recieve = request.form['date_give']
+    memo_receive = request.form['memo_give']
+    date_recieve = request.form['date_give']  
+    anonymous_receive = request.form['anonymous']
 
-    memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve }
+    memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve, 'anonymous': anonymous_receive }
 
     db.memos.insert_one(memo)
     return jsonify({'result': 'success'})
+
 
 
 @app.route('/home', methods=['GET'])
@@ -60,6 +61,11 @@ def read_memos():
     result = list(db.memos.find({}, {'_id': 0}))
     return jsonify({'result': 'success', 'memos': result})
     
+@app.route("/logout")
+def logout():
+	"""Logout Form"""
+	session['logged_in'] = False
+	return redirect(url_for('home'))
 
 if __name__ == '__main__':  
     app.secret_key = "123"
