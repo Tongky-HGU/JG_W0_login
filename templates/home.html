@@ -12,9 +12,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
+    
 
     <title>home</title>
     <style>
+<<<<<<< HEAD
         .card {
             padding: 5px;
             height: 250px;
@@ -29,6 +31,11 @@
             flex-direction: column;
         }
 
+=======
+        .center {
+                text-align: center;
+            }
+>>>>>>> e5b7663b27fd4aadb328b53a440d1d12946783bf
     </style>
     <script>
         $(document).ready(function () {
@@ -91,7 +98,11 @@
                 success: function (response) {
                     let memos = response["memos"];
                     console.log(memos);
+<<<<<<< HEAD
                     for (let i = memos.length - 1; i >= 0; i--) {
+=======
+                    for (let i = memos.length-1; i >= 0; i--) {
+>>>>>>> e5b7663b27fd4aadb328b53a440d1d12946783bf
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
@@ -111,40 +122,23 @@
 </head>
 
 <body>
-
-    <div class="container">
-        <div class="section">
-            <div class="columns">
-                <div class="column has-text-centered">
-                    <h1 class="title" style="color: rgb(1, 1, 47);"> 정글 불만 게시판 </h1><br>
-                </div>
-            </div>
-            <div id="app" class="row columns is-multiline">
-                <!-- <div v-for="card in cardData" key="card.id" class="column is-4">
-                    <div class="card large">
-                        <div class="card-content">
-                            <div class="input" id="my_name">@{{session['name']}}</div>
-                            <div class="field">
-                                <div class="control">
-                                    <input class="input" id="my_memo" type="text" placeholder="내용">
-                                </div>
-                            </div>
-                            <div class="button" onclick="postMemo()"> 업로드 </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-for="card in cardData" key="card.id" class="column is-4">
-                    <div class="card large">
-                        <div class="card-content">
-                            <div class="title">ddd</div>
-                            <p>dddd</p>
-                            <div class="content">content</div>
-                        </div>
-                    </div>
-                </div> -->
+    <section class="hero is-warning">
+        <div class="hero-body">
+            <div class="container center">
+                <h1 class="title">
+                    정글 불만 게시판😆
+                </h1>
+                <h2 class="subtitle">
+                    비밀 보장 해드립니다
+                </h2>
             </div>
         </div>
-    </div>
+    </section>
+    <div class="container">
+        <div class="section">
+            <div id="app" class="row columns is-multiline">
+            </div>
+        </div>
     </div>
 
 
