@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 client = MongoClient('localhost', 27017)
 #client = MongoClient('mongodb://9jo:9jo@13.209.68.109', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.session  
+db = client.session  # 'dbsparta'라는 이름의 db를 만들거나 사용합니다.
 
 
 @app.route('/')
@@ -46,7 +46,7 @@ def add_user():
 def main():
     return render_template('home.html')
 
-@app.route('/home', methods=['POST'])
+@app.route('/home/post', methods=['POST'])
 def post_memo():
     id_receive = request.form['id_give']  
     memo_receive = request.form['memo_give']
@@ -58,9 +58,7 @@ def post_memo():
     db.memos.insert_one(memo)
     return jsonify({'result': 'success'})
 
-
-
-@app.route('/home', methods=['GET'])
+@app.route('/home/read', methods=['GET'])
 def read_memos():
     result = list(db.memos.find({}, {'_id': 0}))
     return jsonify({'result': 'success', 'memos': result})
@@ -70,7 +68,6 @@ def logout():
 	"""Logout Form"""
 	session['logged_in'] = False
 	return redirect(url_for('home'))
-
 
 if __name__ == '__main__':  
     app.secret_key = "123"
