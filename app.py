@@ -59,7 +59,6 @@ def post_memo():
     return jsonify({'result': 'success'})
 
 
-
 @app.route('/home', methods=['GET'])
 def read_memos():
     result = list(db.memos.find({}, {'_id': 0}))

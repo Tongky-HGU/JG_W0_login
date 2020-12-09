@@ -115,6 +115,7 @@
                 success: function (response) {
                     let memos = response["memos"];
                     let name = `{{session['name']}}`;
+                    console.log(memos)
                     for (let i = memos.length-1; i >= 0; i--) {
                         let upload_name = '익명';
                         if (memos[i]['anonymous'] == 'false') {
@@ -126,8 +127,8 @@
                             <div class="title">@${upload_name}</div>
                             <div class="content is-multiline">${memos[i]['memo']}</div>`;
                         //삭제버튼
-                        console.log(name.length);
-                        console.log(String(memos[i]['id'].replace(' ','')).length);
+                        console.log(name);
+                        console.log(String(memos[i]['id'].replace(' ','')));
                         console.log(memos[i]['id'].replace(' ','') == name);
 
                         console.log('____________________');
