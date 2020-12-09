@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient  
 import requests
+from bson import ObjectId
 
 app = Flask(__name__)
 client = MongoClient('localhost', 27017)
@@ -68,14 +69,8 @@ def read_memos():
 @app.route('/home/delete', methods=['POST'])
 def delete_memos():
     db_id_receive = request.form['db_id_give']
-    # object_id_del require(db_id_receive).ObjectID;
-    # print(object_id)
-    db.memos.delete_one({'_id' : db_id_receive})
-
-    
-
-
-    # db.memos.delete_one({'title':title_receive})
+    object_id = ObjectId(db_id_receive)
+    db.memos.delete_one({'_id' : object_id})
 
     return jsonify({'result': 'success'})
     
