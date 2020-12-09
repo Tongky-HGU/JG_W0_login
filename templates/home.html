@@ -11,8 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous">
-    </script>
+        crossorigin="anonymous"></script>
     
 
     <title>home</title>
@@ -30,6 +29,17 @@
             display: flex;
             overflow-y: auto;
             flex-direction: column;
+        }
+        
+        .memo-input{
+            height: 80px;
+            resize: none;
+        }
+        .input-card{
+            padding-top: 15px;
+        }
+        .input-cardbox{
+            border: hsl(48, 100%, 67%) solid 5px;
         }
         #logout{
             text-align:right;
@@ -51,27 +61,6 @@
         }
 
         $(document).ready(function () {
-            $("#app").html("");
-            tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
-                    <div class="card large">
-                        <div class="card-content">
-                            <div class="title" id="my_name">{{session['name']}} 
-                            </div>
-                            <div class="field">
-                                <div class="control">
-                                    <input class="input" id="my_memo" type="text" placeholder="내용">
-                                </div>
-                            </div>
-                            <div class="button is-link" onclick="postMemo()" style="float:left"> 업로드 
-                            </div>
-                            <label class="checkbox is-pulled-right" style="float:left">
-                                    <input id="anonymous" type="checkbox" onclick="anonymous(this)">
-                                        익명
-                                    </label>
-                        </div>
-                    </div>
-                </div>`
-            $("#app").append(tempHtml);
             showMemos();
 
         });
@@ -94,7 +83,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/home",
+                url: "/home/post",
                 data: { id_give: name, memo_give: memo, anonymous: anonymous_check, date_give : date},
                 success: function (response) {
                     if (response["result"] == "success") {
@@ -110,60 +99,28 @@
         function showMemos() {
             $.ajax({
                 type: "GET",
-                url: "/home",
+                url: "/home/read",
                 data: {},
                 success: function (response) {
                     let memos = response["memos"];
-                    let name = `{{session['name']}}`;
-                    console.log(memos)
                     for (let i = memos.length-1; i >= 0; i--) {
-                        let upload_name = '익명';
+                        let upload_name = '익명'
                         if (memos[i]['anonymous'] == 'false') {
-                            upload_name = memos[i]['id'];
+                            upload_name = memos[i]['id']
                         }
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
                             <div class="title">@${upload_name}</div>
-                            <div class="content is-multiline">${memos[i]['memo']}</div>`;
-                        //삭제버튼
-                        console.log(name);
-                        console.log(String(memos[i]['id'].replace(' ','')));
-                        console.log(memos[i]['id'].replace(' ','') == name);
-
-                        console.log('____________________');
-
-
-                        if(memos[i]['id'].replace('\n','') == `{{session['name']}}`){
-                            tempHtml = tempHtml + `<div class="button" onclick="deleteMemo('ㅅ')" style="float:left">삭제</div>`;
-                            console.log('일치');
-                        }
-
-                        console.log('____________________')
-
-                        tempHtml = tempHtml + `<div class="content_date is-pulled-right">${memos[i]['date']}</div>
+                            <div class="content is-multiline">${memos[i]['memo']}</div>
+                            <div class="content_date is-pulled-right">${memos[i]['date']}</div>
                         </div>
                     </div>
-                </div>`;
+                </div>`
                         $("#app").append(tempHtml);
-                        
                     }
                 }
             })
-        }
-
-        function deleteMemo(title) {
-            // $.ajax({
-            //     type: "POST",
-            //     url: "/memo/delete",
-            //     data: { 'title_give': title },
-            //     success: function (response) {
-            //         if (response['result'] == 'success') {
-            //             alert('삭제 완료!')
-            //             window.location.reload()
-            //         }
-            //     }
-            // });
         }
 
     </script>
@@ -187,6 +144,31 @@
     <div class="container">
         <div class="section">
             <div id="app" class="row columns is-multiline">
+                <div v-for="card in cardData" key="card.id" class="column is-4">
+                    
+                    <div class="card large input-cardbox">
+                        <header class="card-header has-background-warning">
+                            <p class="card-header-title">
+                                글쓰기
+                            </p>
+                        </header>
+                        <div class="card-content input-card">
+                            <div class="title" id="my_name">{{session['name']}} 
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <textarea rows="4" class="input memo-input" id="my_memo" type="text" placeholder="내용"></textarea>
+                                </div>
+                            </div>
+                            <div class="button is-link" onclick="postMemo()" style="float:left"> 업로드 
+                            </div>
+                            <label class="checkbox is-pulled-right" style="float:left">
+                                    <input id="anonymous" type="checkbox" onclick="anonymous(this)">
+                                        익명
+                                    </label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
