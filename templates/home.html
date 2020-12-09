@@ -64,9 +64,16 @@
             padding-top: 10px;
         }
 
-        /* .like-footer{
-            position: fixed;
-        } */
+        #icon {
+            padding-top: 5px;
+        }
+        .dropdown-button{
+            /* background-color: hsl(48, 100%, 29%); */
+            /* border:hsl(48, 100%, 67%) solid 3px; */
+            border:black solid 1px;
+            margin-bottom: 5px;
+        }
+
     </style>
     <script>
         let anonymous_check = false;
@@ -158,7 +165,7 @@
                                                 <footer class="card-footer like-footer">
                                                     <p class="card-footer-item has-text-info" style="cursor: pointer" onclick="like_memo('${memos[i]['_id']}')">
                                                         ${memos[i]['like']}
-                                                        <span id="icon" class="icon" >
+                                                        <span id="icon like" class="icon" >
                                                             <i class="far fa-thumbs-up"></i>
                                                         </span>
                                                     </p>
@@ -226,7 +233,7 @@
 
 <body>
     <section class="hero is-warning">
-        <a id="logout" href="/logout" class="has-text-danger"> 로그아웃 </a>
+        <a id="logout" href="/logout" class="has-text-black"> 로그아웃 </a>
         <div class="hero-body">
 
             <div class="container center">
@@ -245,15 +252,15 @@
 
             <div class="dropdown is-hoverable">
                 <div class="dropdown-trigger">
-                    <button class="button " aria-haspopup="true" aria-controls="dropdown-menu3">
+                    <button class="button dropdown-button" aria-haspopup="true" aria-controls="dropdown-menu3">
                         <span>정렬</span>
                         <span class="icon is-small">
                             <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
                     </button>
                 </div>
-                <div class="dropdown-menu " id="dropdown-menu3" role="menu">
-                    <div class="dropdown-content">
+                <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                    <div class="dropdown-content ">
                         <a onclick="sortMemo('mine')" class="dropdown-item">
                             내가 쓴 글
                         </a>
