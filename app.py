@@ -40,9 +40,14 @@ def register():
 
 @app.route('/register/add', methods=['POST'])
 def add_user():
-    new_user = {'username':request.form['id_give'], 'password':request.form['password_give']}
-    db.session.insert_one(new_user)
-    return jsonify({'result': 'success'})
+    new_user = {'username':request.form['id_give'], 'password':request.form['password_give'], 'password-check':request.form['password_check_give']}
+    if list(db.session.find({'username':request.form['id_give']})):
+        return jsonify({'result': 'overlap'})
+    elif request.form['password_give'] != request.form['password_check_give']:
+        return jsonify({'result': 'error'})
+    else:
+        db.session.insert_one(new_user)
+        return jsonify({'result': 'success'})
 
 @app.route('/home')
 def main():
