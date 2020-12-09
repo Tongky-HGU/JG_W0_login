@@ -30,7 +30,7 @@ def login():
         if password == user['password']:
             session['logged_in'] = True
             session['name'] = user['username']
-            session['sort_order'] = 'mine'
+            session['sort_order'] = 'time'
             return jsonify({'result': 'success'})
     return jsonify({'result': 'fail'})
 
@@ -62,11 +62,17 @@ def post_memo():
 
 @app.route('/home/read', methods=['GET'])
 def read_memos():
-    # result = list(db.memos.find({}))
     if session['sort_order'] == 'time':
         result = list(db.memos.find({}))
+    elif session['sort_order'] == 'time_old':
+        result = list(db.memos.find({}))
+        result.reverse()
     elif session['sort_order'] == 'mine':
         result = list(db.memos.find({'id':session['name']}))
+    elif session['sort_order'] == 'like':
+        result = list(db.memos.find({}).sort("like",1))
+    elif session['sort_order'] == 'dislike':
+        result = list(db.memos.find({}).sort("dislike",1))
 
     for data in result:
         data['_id'] = str(data['_id'])

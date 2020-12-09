@@ -244,35 +244,29 @@
 
             <div class="dropdown is-hoverable">
                 <div class="dropdown-trigger">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                    <button class="button " aria-haspopup="true" aria-controls="dropdown-menu3">
                         <span>정렬</span>
                         <span class="icon is-small">
                             <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
                     </button>
                 </div>
-                <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                <div class="dropdown-menu " id="dropdown-menu3" role="menu">
                     <div class="dropdown-content">
                         <a onclick="sortMemo('mine')" class="dropdown-item">
                             내가 쓴 글
                         </a>
                         <a onclick="sortMemo('time')" class="dropdown-item">
-                            시간순
+                            최신순
                         </a>
-                        <a href="#" class="dropdown-item">
-                            Grid
+                        <a onclick="sortMemo('time_old')" class="dropdown-item">
+                            오래된순
                         </a>
-                        <a href="#" class="dropdown-item">
-                            Form
+                        <a onclick="sortMemo('like')" class="dropdown-item">
+                            좋아요순
                         </a>
-                        <a href="#" class="dropdown-item">
-                            Elements
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            Components
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            Layout
+                        <a onclick="sortMemo('dislike')" class="dropdown-item">
+                            싫어요순
                         </a>
                     </div>
                 </div>
