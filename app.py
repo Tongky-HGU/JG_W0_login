@@ -4,7 +4,7 @@ from bson import ObjectId
 import requests
 
 app = Flask(__name__)
-client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://9jo:9jo@13.209.68.109', 27017)
 #client = MongoClient('mongodb://9jo:9jo@13.209.68.109', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.session  # 'dbsparta'라는 이름의 db를 만들거나 사용합니다.
 
