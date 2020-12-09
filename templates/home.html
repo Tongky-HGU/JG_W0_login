@@ -16,7 +16,6 @@
 
     <title>home</title>
     <style>
-<<<<<<< HEAD
         .card {
             padding: 5px;
             height: 250px;
@@ -31,11 +30,9 @@
             flex-direction: column;
         }
 
-=======
         .center {
                 text-align: center;
             }
->>>>>>> e5b7663b27fd4aadb328b53a440d1d12946783bf
     </style>
     <script>
         $(document).ready(function () {
@@ -62,9 +59,9 @@
             let today = new Date();
             let year = today.getFullYear();
             let month = today.getMonth();
-            let date = today.getDate();
-            let hours = today.getHours();
-            let minutes = today.getMinutes();
+            let date = ("00"+today.getDate()).slice(-2);
+            let hours = ("00"+today.getHours()).slice(-2);
+            let minutes = ("00"+today.getMinutes()).slice(-2);
             let now = year + '/' + month + '/' + date + ' ' + hours + ":" + minutes;
             return now
         }
@@ -98,11 +95,7 @@
                 success: function (response) {
                     let memos = response["memos"];
                     console.log(memos);
-<<<<<<< HEAD
-                    for (let i = memos.length - 1; i >= 0; i--) {
-=======
                     for (let i = memos.length-1; i >= 0; i--) {
->>>>>>> e5b7663b27fd4aadb328b53a440d1d12946783bf
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">

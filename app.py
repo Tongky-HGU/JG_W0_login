@@ -4,7 +4,7 @@ import requests
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb://test:test@localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.session  # 'dbsparta'라는 이름의 db를 만들거나 사용합니다.
 
 
@@ -55,10 +55,6 @@ def post_memo():
     return jsonify({'result': 'success'})
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e5b7663b27fd4aadb328b53a440d1d12946783bf
 @app.route('/home', methods=['GET'])
 def read_memos():
     result = list(db.memos.find({}, {'_id': 0}))
