@@ -77,7 +77,7 @@
         }
 
         function postMemo() {
-            let name = $("#my_name").text().replace("@","");
+            let name = $("#my_name").text().replace("@"," ");
             let memo = $("#my_memo").val();
             let date = getDate();
 
@@ -103,11 +103,18 @@
                 data: {},
                 success: function (response) {
                     let memos = response["memos"];
+                    
                     for (let i = memos.length-1; i >= 0; i--) {
                         let upload_name = '익명'
                         if (memos[i]['anonymous'] == 'false') {
                             upload_name = memos[i]['id']
                         }
+                        // console.log(memos[i]['id'].replace(/[0-9]/g, ""));
+                        if (memos[i]['id'] == `{{session['name']}}`){
+                            console.log('zz')
+                        }
+                        // console.log(memos[i]['id'].length)
+                        // console.log(`{{session['name']}}`)
                         let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
                     <div class="card large">
                         <div class="card-content">
@@ -153,7 +160,8 @@
                             </p>
                         </header>
                         <div class="card-content input-card">
-                            <div class="title" id="my_name">{{session['name']}} 
+                            <div class="title">
+                            <h2 class="title" id="my_name">@{{session['name']}}</h2>
                             </div>
                             <div class="field">
                                 <div class="control">
