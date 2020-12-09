@@ -67,6 +67,7 @@ def logout():
 	session['logged_in'] = False
 	return redirect(url_for('home'))
 
+
 if __name__ == '__main__':  
     app.secret_key = "123"
     app.run('0.0.0.0', port=5000, debug=True)
