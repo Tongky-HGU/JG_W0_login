@@ -198,11 +198,11 @@
                         window.location.reload()
                     }
                 }
-            });
+            })
         }
 
         function like_memo(db_id) {
-            let user_id = {{session['name']}}
+            let user_id = `{{session['name']}}`
             $.ajax({
                 type: "POST",
                 url: "/home/like",
@@ -222,7 +222,7 @@
             )}
 
         function dislike_memo(db_id) {
-            let user_id = {{session['name']}}
+            let user_id = `{{session['name']}}`
             $.ajax({
                 type: "POST",
                 url: "/home/dislike",
