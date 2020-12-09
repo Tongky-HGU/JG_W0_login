@@ -42,6 +42,10 @@ def add_user():
     db.session.insert_one(new_user)
     return jsonify({'result': 'success'})
 
+@app.route('/home')
+def main():
+    return render_template('home.html')
+
 @app.route('/home', methods=['POST'])
 def post_memo():
     id_receive = request.form['id_give']  
