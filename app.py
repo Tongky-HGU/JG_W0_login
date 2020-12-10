@@ -26,9 +26,8 @@ def login():
     username = request.form['id_give']
     password = request.form['password_give'] 
     user = db.session.find_one({'username':username})
-    db_password = jwt.decode(user['password'], 'abc', algorithm="HS256")['password']
-    print(db_password)
     if user:
+        db_password = jwt.decode(user['password'], 'abc', algorithm="HS256")['password']
         if password == db_password:
             session['logged_in'] = True
             session['name'] = user['username']
