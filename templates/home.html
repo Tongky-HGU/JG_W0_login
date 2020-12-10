@@ -24,7 +24,7 @@
 
         .card {
             padding: 5px;
-            height: 300px;
+            height: 320px;
         }
 
         .content {
@@ -50,6 +50,7 @@
 
         .post-box {
             padding-bottom: 13px;
+            overflow:hidden
         }
 
         #logout {
@@ -76,6 +77,13 @@
         .card-footer-item:hover{
             background-color: hsl(0, 0%, 96%);
         }
+        .like-footer{
+            margin-top: 5px;
+        }
+        /* .upload-button{
+            border:black solid 0.5px;
+            border-radius: 5px;
+        } */
     </style>
     <script>
         let anonymous_check = false;
@@ -136,6 +144,31 @@
                 }
             })
         }
+        
+        function showUpdate(sel){
+            
+                $(sel).parents('div.column').hide()
+                $(sel).parents('div.column').next('div.column').show()
+            }
+        
+        function updateMemo(sel, db_id){
+            console.log(sel)
+            let new_memo = $(sel).parent().prev().children().children().val();
+            console.log(new_memo)
+            let new_time = $(sel).prev().text();
+            $.ajax({
+                type: 'POST',
+                url: '/home/update',
+                data: {'new_memo': new_memo, 'db_id_give': db_id, 'new_time': new_time},
+                success: function(response){
+                    if (response['result'] == 'success'){
+                        alert('수정 완료!')
+                        window.location.reload()
+                    }
+                }
+            })
+        }
+
 
         function showMemos() {
             $.ajax({
@@ -156,12 +189,17 @@
                                                 <div class="card-content post-box">`
                         if (memos[i]['id'] == `{{session['name']}}`) {
                             tempHtml = tempHtml + `<span id="icon" class="icon is-small has-text-danger-dark is-pulled-right" >
-                                                                                <i class="far fa-times-circle" onclick="deleteMemo('${memos[i]['_id']}')"></i>
-                                                                            </span>`;
+                                                        <i class="far fa-times-circle" onclick="deleteMemo('${memos[i]['_id']}')"></i>
+                                                    </span>`;
                         }
                         tempHtml = tempHtml + `<div class="title">@${upload_name}</div>
-                                                <div class="content is-multiline">${memos[i]['memo']}</div>
-                                                <div class="is-right">${memos[i]['date']}</div>
+                                                <div class="content is-multiline">${memos[i]['memo']}</div>`
+                        if (memos[i]['id'] == `{{session['name']}}`) {
+                            tempHtml = tempHtml + `<div class="button is-link is-small" style="float:left" onclick="showUpdate(this)""> 수정
+                                                    </div>`;
+                        }
+                        
+                        tempHtml = tempHtml + `<div class="is-pulled-right" style="float:left">${memos[i]['date']}</div>
                                                 </div>
                                                 
                                                 <footer class="card-footer like-footer">
@@ -178,9 +216,26 @@
                                                         </span>
                                                     </p>
                                                 </footer>
-                                                
                                             </div>
-                                        </div>`
+                                        </div>
+                                        <div v-for="card in cardData" key="card.id" class="column is-4 update-card" style="display:none">
+                                            <div class="card large">
+                                                <div class="card-content post-box">
+                                                    <div class="title">@${upload_name}</div>
+                                                    <div class="field">
+                                                        <div class="control">
+                                                            <textarea rows="5" class="input memo-input" id="my_memo" type="text">${memos[i]['memo']}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div style="margin-top:65px">
+                                                    <div class="is-right">${getDate()}</div>
+                                                    <div class="button is-link" style="margin-top:5px" onclick="updateMemo(this, '${memos[i]['_id']}')"> 저장
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        `
 
                         $("#app").append(tempHtml);
                     }

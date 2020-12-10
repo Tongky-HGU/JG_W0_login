@@ -9,19 +9,6 @@
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
         <style>
-             html{
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            background-color: hsl(48, 100%, 67%);
-            }
-
-            body{
-                margin: 0;
-                width: 100%;
-                height: 100%;
-                
-            }
             .log-box{
                 width:500px;
                 margin: 20px auto 0 auto;
@@ -42,18 +29,18 @@
             $.ajax({
                 type: "POST",
                 url: "/register/add",
-                data: { 'id_give': id, 'password_give': password, 'password_check_give':password_check },
+                data: { 'id_give': id, 'password_give': password},
                 success: function (response) {
-                    if (response["result"] == "success") {
-                        alert("회원가입 성공!");
-                        window.location.href = '/';
-                    } else if (response["result"] == "overlap") {
+                     if (response["result"] == "overlap") {
                         alert("아이디 중복!")
                         window.location.reload();
-                    } else if (response["result"] == "error") {
+                    } else if (password != password_check) {
                         alert("비밀번호 불일치!")
                         window.location.reload();
-                    } 
+                    } else if (response["result"] == "success") {
+                        alert("회원가입 성공!");
+                        window.location.href = '/';
+                    }
                 }
             })
 
@@ -62,7 +49,7 @@
     </head>
 
     <body>
-        <div class="log-box has-background-white">
+        <div class="log-box has-background-warning">
             <div class="field">
                 <label class="label" id="title">회원가입</label>
                 <label class="label">Username</label>
@@ -94,7 +81,7 @@
   
             <div class="field">
                 <p class="control">
-                  <button onclick="register()" class="button is-success">
+                  <button onclick="register()" class="button is-warning is-light">
                 <!-- <button type="submit" class="button is-link"> -->
                     Register
                 </button>
