@@ -1,10 +1,11 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient  
 from bson import ObjectId
+import jwt
 import requests
 
 app = Flask(__name__)
-client = MongoClient('mongodb://9jo:9jo@13.209.68.109', 27017)
+client = MongoClient('localhost', 27017)
 #client = MongoClient('mongodb://9jo:9jo@13.209.68.109', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.session  # 'dbsparta'라는 이름의 db를 만들거나 사용합니다.
 
@@ -23,11 +24,12 @@ def home():
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['id_give']
-    password = request.form['password_give']  
-
+    password = request.form['password_give'] 
     user = db.session.find_one({'username':username})
+    db_password = jwt.decode(user['password'], 'abc', algorithm="HS256")['password']
+    print(db_password)
     if user:
-        if password == user['password']:
+        if password == db_password:
             session['logged_in'] = True
             session['name'] = user['username']
             session['sort_order'] = 'time'
@@ -40,11 +42,13 @@ def register():
 
 @app.route('/register/add', methods=['POST'])
 def add_user():
-    new_user = {'username':request.form['id_give'], 'password':request.form['password_give'], 'password-check':request.form['password_check_give']}
+    before_password = request.form['password_give']
+    after_password = jwt.encode({'password': before_password}, 'abc', algorithm='HS256')
+    print(after_password)
+    new_user = {'username':request.form['id_give'], 'password':after_password}
+    print(new_user)
     if list(db.session.find({'username':request.form['id_give']})):
         return jsonify({'result': 'overlap'})
-    elif request.form['password_give'] != request.form['password_check_give']:
-        return jsonify({'result': 'error'})
     else:
         db.session.insert_one(new_user)
         return jsonify({'result': 'success'})
@@ -59,8 +63,6 @@ def post_memo():
     memo_receive = request.form['memo_give']
     date_recieve = request.form['date_give']  
     anonymous_receive = request.form['anonymous']
-    
-
     memo = {'id': id_receive, 'memo': memo_receive, 'date': date_recieve, 'anonymous': anonymous_receive, 'like': 0, 'dislike': 0, 'like_id' : "", 'dislike_id':""}
 
     db.memos.insert_one(memo)
@@ -89,6 +91,16 @@ def delete_memos():
     db_id_receive = request.form['db_id_give']
     object_id = ObjectId(db_id_receive)
     db.memos.delete_one({'_id' : object_id})
+    return jsonify({'result': 'success'})
+
+@app.route('/home/update', methods=['POST'])
+def update_memos():
+    db_id_receive = request.form['db_id_give']
+    new_memo_receive = request.form['new_memo']
+    new_time_receive = request.form['new_time'] + '(수정)'
+    object_id = ObjectId(db_id_receive)
+    db.memos.update_one({'_id' : object_id},{'$set':{'memo':new_memo_receive}})
+    db.memos.update_one({'_id' : object_id},{'$set':{'date':new_time_receive}})
     return jsonify({'result': 'success'})
 
 @app.route('/home/like', methods=['POST'])
